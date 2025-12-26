@@ -1,0 +1,16 @@
+{
+  "name": "eventswidget-playwright-test",
+  "version": "1.0.0",
+  "description": "Автоматизированные тесты для конструктора календаря мероприятий 3Snet",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.45.0",
+    "@types/node": "^20.0.0"
+  },
+  "author": "Виктор",
+  "license": "MIT"
+}
