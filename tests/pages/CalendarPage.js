@@ -3,7 +3,7 @@ class CalendarPage {
     this.page = page;
   }
 
-  // НЕ ИСПОЛЬЗУЙТЕ this.selectors! Просто повторяйте селекторы из тестов
+  
   async goto() {
     await this.page.goto('https://dev.3snet.info/eventswidget/');
   }
@@ -32,7 +32,7 @@ class CalendarPage {
   async selectTopic(topicName) {
     await this.page.locator('.checkselect-over').first().click();
     
-    // Используем разные селекторы для разных тем
+    
     if (topicName === 'Affiliate' || topicName === 'Igaming' || topicName === 'SEO' || topicName === 'Финтех') {
       await this.page.locator('label').filter({ hasText: topicName }).click();
     } else {
