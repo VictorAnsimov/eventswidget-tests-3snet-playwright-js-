@@ -2,6 +2,7 @@
   "name": "eventswidget-playwright-test",
   "version": "1.0.0",
   "description": "Автоматизированные тесты для конструктора календаря мероприятий 3Snet",
+  "type": "module",
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",
@@ -9,9 +10,12 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"**/*.ts\"",
-    "type-check": "tsc --noEmit"
+    "format:check": "prettier --check \"**/*.ts\"",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf playwright-report test-results"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@playwright/test": "^1.45.0",
     "@types/node": "^20.19.27",
     "@typescript-eslint/eslint-plugin": "^8.50.1",
@@ -19,7 +23,8 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.7.4",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.1"
   },
   "author": "Виктор",
   "license": "MIT"
