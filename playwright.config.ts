@@ -1,7 +1,6 @@
-const { defineConfig, devices } = require('@playwright/test');
-const { testData } = require('./tests/fixtures/test-data')
+import { defineConfig, devices } from '@playwright/test';
 
-module.exports = defineConfig({
+export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -12,7 +11,7 @@ module.exports = defineConfig({
     baseURL: 'https://dev.3snet.info',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    video: 'retain-on-failure'
+    video: 'retain-on-failure',
   },
   projects: [
     {
