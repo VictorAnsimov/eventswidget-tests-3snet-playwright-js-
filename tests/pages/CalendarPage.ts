@@ -1,11 +1,10 @@
-import { Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 import { CalendarLocators } from '../locators/calendar.locators';
 
-//Можешь это вынести, если будет переиспользовано, если нет то пох.
 type LanguageCode = 'en' | 'ru';
 type Theme = 'light' | 'dark';
-type RadioOtion = 1 | 2 | 3;
+type RadioOption = 1 | 2 | 3;
 
 export class CalendarPage extends BasePage {
   readonly locators: CalendarLocators;
@@ -17,23 +16,18 @@ export class CalendarPage extends BasePage {
 
   async goto(): Promise<void> {
     await this.navigateTo('https://dev.3snet.info/eventswidget/');
-    await this.page.locator('text=Шаг 1').waitFor({ state: 'visible', timeout: 15000 });
+    await this.page.locator('text=Шаг 1').waitFor({ state: 'visible', timeout: 15_000 });
   }
 
   // ========== HELPER METHODS ==========
-  private async clickAndWait(locator: any, delay = 300): Promise<void> {
-    await locator.click();
-    await this.waitForTimeout(delay);
-  }
 
-  private async safeClick(locator: any, delay = 300): Promise<void> {
-    if (await locator.isVisible()) {
-      await locator.click();
-      await this.waitForTimeout(delay);
-    }
+  private async clickAndWait(locator: Locator): Promise<void> {
+    await locator.click();
+    await this.smallTimeout();
   }
 
   // ========== LANGUAGE METHODS ==========
+
   async switchLanguage(language: LanguageCode): Promise<void> {
     const toggle =
       language === 'en' ? this.locators.languageToggleRU : this.locators.languageToggleEN;
@@ -47,11 +41,13 @@ export class CalendarPage extends BasePage {
   async switchLanguageToEnglish(): Promise<void> {
     await this.switchLanguage('en');
   }
+
   async switchLanguageToRussian(): Promise<void> {
     await this.switchLanguage('ru');
   }
 
   // ========== TOPICS METHODS ==========
+
   async selectAllTopics(): Promise<void> {
     await this.clickAndWait(this.locators.topicsDropdown);
     await this.clickAndWait(this.locators.topicsSelectAll);
@@ -70,10 +66,12 @@ export class CalendarPage extends BasePage {
   }
 
   async clearTopics(): Promise<void> {
-    await this.safeClick(this.page.locator('text=Очистить').first(), 500);
+    // лучше через локатор из CalendarLocators, а не голый text
+    await this.clickAndWait(this.locators.topicsClear);
   }
 
   // ========== COUNTRIES METHODS ==========
+
   async selectAllCountries(): Promise<void> {
     await this.clickAndWait(this.locators.countriesDropdown);
     await this.clickAndWait(this.locators.countriesSelectAll);
@@ -81,27 +79,36 @@ export class CalendarPage extends BasePage {
   }
 
   async clearCountries(): Promise<void> {
-    await this.safeClick(this.page.locator('text=Очистить').nth(1), 500);
+    await this.clickAndWait(this.locators.countriesClear);
   }
 
   // ========== RADIO BUTTONS ==========
-  async clickRadio(option: RadioOtion): Promise<void> {
-    const buttons = [this.locators.firstRadio, this.locators.secondRadio, this.locators.thirdRadio];
-    await this.clickAndWait(buttons[option - 1]);
+
+  async clickRadio(option: RadioOption): Promise<void> {
+    const buttons: Record<RadioOption, Locator> = {
+      1: this.locators.firstRadio,
+      2: this.locators.secondRadio,
+      3: this.locators.thirdRadio,
+    };
+
+    await this.clickAndWait(buttons[option]);
   }
 
   // Для обратной совместимости
   async clickFirstRadio(): Promise<void> {
     await this.clickRadio(1);
   }
+
   async clickSecondRadio(): Promise<void> {
     await this.clickRadio(2);
   }
+
   async clickThirdRadio(): Promise<void> {
     await this.clickRadio(3);
   }
 
   // ========== THEME METHODS ==========
+
   async selectTheme(theme: Theme): Promise<void> {
     const selector = theme === 'light' ? this.locators.lightTheme : this.locators.darkTheme;
     await this.clickAndWait(selector);
@@ -111,11 +118,13 @@ export class CalendarPage extends BasePage {
   async selectLightTheme(): Promise<void> {
     await this.selectTheme('light');
   }
+
   async selectDarkTheme(): Promise<void> {
     await this.selectTheme('dark');
   }
 
   // ========== SIZE METHODS ==========
+
   async setSize(width?: number, height?: number): Promise<void> {
     if (width !== undefined) {
       await this.locators.widthInput.fill(width.toString());
@@ -124,7 +133,7 @@ export class CalendarPage extends BasePage {
       await this.locators.heightInput.fill(height.toString());
     }
     if (width !== undefined || height !== undefined) {
-      await this.waitForTimeout(500);
+      await this.smallTimeout(500);
     }
   }
 
@@ -132,41 +141,45 @@ export class CalendarPage extends BasePage {
   async setWidth(width: number): Promise<void> {
     await this.setSize(width);
   }
+
   async setHeight(height: number): Promise<void> {
     await this.setSize(undefined, height);
   }
 
   async toggleFullWidth(): Promise<void> {
-    await this.clickAndWait(this.locators.fullWidthToggle, 500);
+    await this.clickAndWait(this.locators.fullWidthToggle);
   }
 
   // ========== ACTION METHODS ==========
+
   async copyCode(): Promise<void> {
-    await this.clickAndWait(this.locators.copyCodeButton, 500);
+    await this.clickAndWait(this.locators.copyCodeButton);
   }
 
   async generatePreview(): Promise<void> {
     await this.locators.generatePreviewButton.click();
-    await this.page.waitForSelector('iframe', { timeout: 10000 });
+    await this.page.waitForSelector('iframe', { timeout: 10_000 });
   }
 
   // ========== PROMO METHODS ==========
+
   async clickAdvertisement(): Promise<void> {
     const promoLink = this.page.locator('a[href*="promocode"]').first();
-    await this.safeClick(promoLink, 2000);
+    await this.clickAndWait(promoLink);
   }
 
   async clickNextPromo(): Promise<void> {
     const nextBtn = this.page.locator('button:text-is("Следующий промокод")');
-    await this.safeClick(nextBtn, 1000);
+    await this.clickAndWait(nextBtn);
   }
 
   // ========== GETTERS ==========
+
   async getGeneratedCode(): Promise<string> {
-    return await this.locators.codeTextarea.inputValue();
+    return this.locators.codeTextarea.inputValue();
   }
 
   async isPreviewVisible(): Promise<boolean> {
-    return await this.locators.previewIframe.isVisible();
+    return this.locators.previewIframe.isVisible();
   }
 }
