@@ -2,6 +2,11 @@ import { Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 import { CalendarLocators } from '../locators/calendar.locators';
 
+//Можешь это вынести, если будет переиспользовано, если нет то пох.
+type LanguageCode = 'en' | 'ru';
+type Theme = 'light' | 'dark';
+type RadioOtion = 1 | 2 | 3;
+
 export class CalendarPage extends BasePage {
   readonly locators: CalendarLocators;
 
@@ -29,17 +34,22 @@ export class CalendarPage extends BasePage {
   }
 
   // ========== LANGUAGE METHODS ==========
-  async switchLanguage(language: 'en' | 'ru'): Promise<void> {
-    const toggle = language === 'en' ? this.locators.languageToggleRU : this.locators.languageToggleEN;
+  async switchLanguage(language: LanguageCode): Promise<void> {
+    const toggle =
+      language === 'en' ? this.locators.languageToggleRU : this.locators.languageToggleEN;
     const option = language === 'en' ? this.locators.englishOption : this.locators.russianOption;
-    
+
     await this.clickAndWait(toggle);
     await this.clickAndWait(option.first());
   }
 
   // Для обратной совместимости с тестами
-  async switchLanguageToEnglish(): Promise<void> { await this.switchLanguage('en'); }
-  async switchLanguageToRussian(): Promise<void> { await this.switchLanguage('ru'); }
+  async switchLanguageToEnglish(): Promise<void> {
+    await this.switchLanguage('en');
+  }
+  async switchLanguageToRussian(): Promise<void> {
+    await this.switchLanguage('ru');
+  }
 
   // ========== TOPICS METHODS ==========
   async selectAllTopics(): Promise<void> {
@@ -50,11 +60,11 @@ export class CalendarPage extends BasePage {
 
   async selectTopic(topicName: string): Promise<void> {
     await this.clickAndWait(this.locators.topicsDropdown);
-    
+
     const selector = ['Affiliate', 'Igaming', 'SEO', 'Финтех'].includes(topicName)
       ? this.page.locator('label').filter({ hasText: topicName })
       : this.page.getByText(topicName);
-    
+
     await this.clickAndWait(selector.first());
     await this.clickAndWait(this.locators.topicsDropdown);
   }
@@ -75,29 +85,35 @@ export class CalendarPage extends BasePage {
   }
 
   // ========== RADIO BUTTONS ==========
-  async clickRadio(option: 1 | 2 | 3): Promise<void> {
-    const buttons = [
-      this.locators.firstRadio,
-      this.locators.secondRadio, 
-      this.locators.thirdRadio
-    ];
+  async clickRadio(option: RadioOtion): Promise<void> {
+    const buttons = [this.locators.firstRadio, this.locators.secondRadio, this.locators.thirdRadio];
     await this.clickAndWait(buttons[option - 1]);
   }
 
   // Для обратной совместимости
-  async clickFirstRadio(): Promise<void> { await this.clickRadio(1); }
-  async clickSecondRadio(): Promise<void> { await this.clickRadio(2); }
-  async clickThirdRadio(): Promise<void> { await this.clickRadio(3); }
+  async clickFirstRadio(): Promise<void> {
+    await this.clickRadio(1);
+  }
+  async clickSecondRadio(): Promise<void> {
+    await this.clickRadio(2);
+  }
+  async clickThirdRadio(): Promise<void> {
+    await this.clickRadio(3);
+  }
 
   // ========== THEME METHODS ==========
-  async selectTheme(theme: 'light' | 'dark'): Promise<void> {
+  async selectTheme(theme: Theme): Promise<void> {
     const selector = theme === 'light' ? this.locators.lightTheme : this.locators.darkTheme;
     await this.clickAndWait(selector);
   }
 
   // Для обратной совместимости
-  async selectLightTheme(): Promise<void> { await this.selectTheme('light'); }
-  async selectDarkTheme(): Promise<void> { await this.selectTheme('dark'); }
+  async selectLightTheme(): Promise<void> {
+    await this.selectTheme('light');
+  }
+  async selectDarkTheme(): Promise<void> {
+    await this.selectTheme('dark');
+  }
 
   // ========== SIZE METHODS ==========
   async setSize(width?: number, height?: number): Promise<void> {
@@ -113,8 +129,12 @@ export class CalendarPage extends BasePage {
   }
 
   // Для обратной совместимости
-  async setWidth(width: number): Promise<void> { await this.setSize(width); }
-  async setHeight(height: number): Promise<void> { await this.setSize(undefined, height); }
+  async setWidth(width: number): Promise<void> {
+    await this.setSize(width);
+  }
+  async setHeight(height: number): Promise<void> {
+    await this.setSize(undefined, height);
+  }
 
   async toggleFullWidth(): Promise<void> {
     await this.clickAndWait(this.locators.fullWidthToggle, 500);
