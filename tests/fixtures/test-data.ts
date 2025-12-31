@@ -1,4 +1,28 @@
-export const TestData = {
+export type Size = {
+  width: number;
+  height: number;
+};
+
+export type Sizes = {
+  small: Size;
+  medium: Size;
+  large: Size;
+  max: Size;
+};
+
+export type Themes = {
+  light: string;
+  dark: string;
+};
+
+export type TestData = {
+  url: string;
+  topics: string[];
+  sizes: Sizes;
+  themes: Themes;
+};
+
+export const TEST_DATA: TestData = {
   url: 'https://dev.3snet.info/eventswidget/',
   
   topics: [
@@ -23,3 +47,10 @@ export const TestData = {
     dark: 'dark'
   }
 };
+
+export const URL = TEST_DATA.url;
+export const TOPICS = TEST_DATA.topics;
+export const SIZES = TEST_DATA.sizes;
+export const THEMES = TEST_DATA.themes;
+
+export default TEST_DATA;
