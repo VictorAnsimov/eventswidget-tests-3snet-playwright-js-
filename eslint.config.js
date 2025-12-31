@@ -1,3 +1,4 @@
+javascript
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
@@ -19,6 +20,11 @@ export default tseslint.config(
       sourceType: 'module',
     },
     rules: {
+      
+      'max-lines': ['warn', { max: 250 }],
+      'max-params': ['error', 3],
+      
+      
       '@typescript-eslint/no-unused-vars': ['warn', {
         'argsIgnorePattern': '^_',
         'varsIgnorePattern': '^_'
@@ -33,9 +39,12 @@ export default tseslint.config(
   {
     files: ['**/*.test.ts', '**/*.spec.ts', 'tests/**/*.ts'],
     rules: {
+      
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      'no-console': 'off'
+      'no-console': 'off',
+      'max-lines': 'off',        
+      'max-params': 'off'        
     }
   }
 );
