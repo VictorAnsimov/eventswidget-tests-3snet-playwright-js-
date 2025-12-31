@@ -18,12 +18,9 @@ export abstract class BasePage {
 
   protected async takeScreenshot(name: string): Promise<void> {
     const safeName = name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    await this.page.screenshot({ 
+    await this.page.screenshot({
       path: `test-results/screenshots/${safeName}_${Date.now()}.png`,
-      fullPage: true 
+      fullPage: true,
     });
   }
 }
-
-
-
